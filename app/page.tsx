@@ -1,32 +1,36 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { signOut } from 'firebase/auth';
-import { deleteCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
 import NavBar from "@/components/NavBar";
+import Spinner from "@/components/ui/Spinner";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/config";
 
 export default function Home() {
-  const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(true);
+  const [user] = useAuthState(auth);
   const router = useRouter();
 
+  useEffect(() => {
+    const userCookie = getCookie("user");
+    if (!userCookie) {
+      router.push("/login");
+    } else {
+      setLoading(false);
+    }
+  }, [router]);
 
-  const handleSignOut = async () => {
-    await signOut(auth);
-    deleteCookie("user");
-    router.push("/login");
-  };
 
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen"><Spinner /></div>;
+  }
 
   return (
     <>
       <NavBar />
-      <Button variant="secondary" onClick={handleSignOut}>Kijelentkezés</Button>
-
     </>
   );
 }

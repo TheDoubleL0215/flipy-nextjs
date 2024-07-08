@@ -1,6 +1,8 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { X, Menu as MenuIcon, Bell, Plus, } from 'lucide-react'
 import { Button } from './ui/Button'
+import { deleteCookie } from 'cookies-next'
+import { useRouter } from 'next/navigation'
 
 const navigation = [
     { name: 'Paklik', href: '#', current: true },
@@ -10,7 +12,14 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
+
 export default function NavBar() {
+    const router = useRouter();
+    const handleSignOut = async () => {
+        deleteCookie("user");
+        router.push("/login");
+    };
+
     return (
         <Disclosure as="nav" className="bg-secondary mb-3">
             <div className="mx-auto px-2 sm:px-6 lg:px-8">
@@ -92,7 +101,7 @@ export default function NavBar() {
                                     </a>
                                 </MenuItem>
                                 <MenuItem>
-                                    <a href="#" className="block px-4 py-2 text-sm text-text data-[focus]:bg-tertitary">
+                                    <a href="#" onClick={handleSignOut} className="block px-4 py-2 text-sm text-text data-[focus]:bg-tertitary">
                                         Kijelentkezés
                                     </a>
                                 </MenuItem>
