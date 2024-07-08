@@ -10,23 +10,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/config";
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [user] = useAuthState(auth);
-  const router = useRouter();
-
-  useEffect(() => {
-    const userCookie = getCookie("user");
-    if (!userCookie) {
-      router.push("/login");
-    } else {
-      setLoading(false);
-    }
-  }, [router]);
-
-
-  if (loading) {
-    return <div className="flex justify-center items-center h-screen"><Spinner /></div>;
-  }
 
   return (
     <>
