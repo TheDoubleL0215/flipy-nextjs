@@ -7,21 +7,69 @@ import Link from 'next/link'
 import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase/config'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { X } from 'lucide-react'
-import { setCookie } from 'cookies-next'
 import { authErrorTranslate } from '@/util/auth-error-translate'
-import Spinner from './ui/Spinner'
 
 export default function LoginForm() {
     const [appError, setAppError] = useState("")
     const [email, setEmail] = useState("")
+    const [loading, setLoading] = useState(false)
     const [password, setPassword] = useState("")
     const router = useRouter()
 
     const [signInWithEmailAndPassword, userEmailSignIn, loadingEmailSignIn, errorEmailSignIn] = useSignInWithEmailAndPassword(auth);
-
     const [signInWithGoogle, userGoogleSignIn, loadingGoogleSignIn, errorGoogleSignIn] = useSignInWithGoogle(auth);
+
+    type Payload = {
+        uid: string | null;
+        email: string | null;
+    };
+
+    const createJwtTokenRequest = async (payload: Payload) => {
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log(data);
+
+            // Redirect to the homepage
+            router.push('/');
+
+        } catch (e) {
+            // Handle errors, displaying an error message
+            console.error('Error during API call:', e);
+        }
+    };
+
+    useEffect(() => {
+        const user = userEmailSignIn || userGoogleSignIn;
+
+        if (user) {
+            const payload: Payload = {
+                uid: user.user.uid,
+                email: user.user.email
+            };
+            createJwtTokenRequest(payload);
+        }
+    }, [userEmailSignIn, userGoogleSignIn]);
+
+    useEffect(() => {
+        setLoading(loadingEmailSignIn || loadingGoogleSignIn);
+    }, [loadingEmailSignIn, loadingGoogleSignIn]);
+
+
 
     useEffect(() => {
         //if error in email sign in
@@ -34,16 +82,6 @@ export default function LoginForm() {
             setAppError(authErrorTranslate(errorGoogleSignIn.code))
         }
     }, [errorEmailSignIn, errorGoogleSignIn])
-
-    useEffect(() => {
-        //if user signed in with one of the methods
-        if (userEmailSignIn || userGoogleSignIn) {
-            const user = userEmailSignIn || userGoogleSignIn;
-            setCookie("user", JSON.stringify(user?.user))
-            router.push("/")
-        }
-    }, [userEmailSignIn, userGoogleSignIn, router])
-
 
     return (
         <div className="flex gap-5 flex-col justify-center items-center w-full">
@@ -78,7 +116,7 @@ export default function LoginForm() {
                     className='w-full' />
             </div>
 
-            <Button typeof='button' isLoading={loadingEmailSignIn} onClick={() => signInWithEmailAndPassword(email, password)} className='w-full flex justify-center items-center' variant='primary'>
+            <Button typeof='button' isLoading={loading} onClick={() => signInWithEmailAndPassword(email, password)} className='w-full flex justify-center items-center' variant='primary'>
                 Bejelentkezés
             </Button>
 

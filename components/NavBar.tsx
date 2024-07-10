@@ -3,6 +3,7 @@ import { X, Menu as MenuIcon, Bell, Plus, } from 'lucide-react'
 import { Button } from './ui/Button'
 import { deleteCookie } from 'cookies-next'
 import { useRouter } from 'next/navigation'
+import { deleteUserCookie } from '@/hooks/deleteUserCookie'
 
 const navigation = [
     { name: 'Paklik', href: '#', current: true },
@@ -15,10 +16,11 @@ function classNames(...classes: string[]) {
 
 export default function NavBar() {
     const router = useRouter();
-    const handleSignOut = async () => {
-        deleteCookie("user");
+    const handleSignOut = () => {
+        deleteUserCookie();
         router.push("/login");
     };
+
 
     return (
         <Disclosure as="nav" className="bg-secondary mb-3">
