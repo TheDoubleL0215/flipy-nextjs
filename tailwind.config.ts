@@ -16,7 +16,7 @@ const config: Config = {
         'background': 'rgb(14, 14, 17)',
         'tertitary': 'rgb(39, 39, 42)',
         'secondary': 'rgb(24, 24, 27)',
-        'border': 'var(--color-neutral-700)',
+        'border': 'rgb(64 64 64)',
         'error': 'rgb(248 113 113)',
         'primary': {
           '50': '#f3fbf2',

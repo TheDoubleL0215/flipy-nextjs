@@ -4,6 +4,7 @@ import "./globals.css";
 import { getServerSession } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 const firaSans = Fira_Sans({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -20,9 +21,11 @@ export default async function RootLayout({
 
 
   return (
-    <html lang="en">
+    <html lang="hu">
       <body className={`${firaSans.className} bg-background h-screen`}>
-        {children}
+        {<SkeletonTheme baseColor="#202020" highlightColor="#444">
+          {children}
+        </SkeletonTheme>}
       </body>
     </html>
   );

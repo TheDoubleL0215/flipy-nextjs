@@ -11,18 +11,24 @@ import { authErrorTranslate } from '@/util/auth-error-translate'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { setCookie } from 'cookies-next'
+import { createJwtTokenRequest } from '@/hooks/userJwtTokenRequest'
 
 export default function RegisterForm() {
     const [error, setError] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [loading, setLoading] = useState(false)
     const router = useRouter()
 
-
     const [createUserWithEmailAndPassword, userEmailSignUp, loadingEmailSignUp, errorEmailSignUp] = useCreateUserWithEmailAndPassword(auth);
-
     const [signInWithGoogle, userGoogleSignUp, loadingGoogleSignUp, errorGoogleSignUp] = useSignInWithGoogle(auth);
+
+    type Payload = {
+        uid: string | null;
+        email: string | null;
+    };
+
 
     useEffect(() => {
         //if error in email sign in
@@ -37,13 +43,25 @@ export default function RegisterForm() {
     }, [errorEmailSignUp, errorGoogleSignUp])
 
     useEffect(() => {
-        //if user signed in with one of the methods
-        if (userEmailSignUp || userGoogleSignUp) {
-            const user = userEmailSignUp || userGoogleSignUp;
-            setCookie("user", JSON.stringify(user?.user))
-            router.push("/")
+        setLoading(loadingEmailSignUp || loadingGoogleSignUp);
+    }, [loadingEmailSignUp, loadingGoogleSignUp]);
+
+    useEffect(() => {
+        const user = userEmailSignUp || userGoogleSignUp;
+
+        if (user) {
+            const payload: Payload = {
+                uid: user.user.uid,
+                email: user.user.email
+            };
+            createJwtTokenRequest(payload).then(() => {
+                router.push('/');
+            }).catch(e => {
+                console.error('Error during API call:', e);
+                setError('Failed to create JWT token');
+            });
         }
-    }, [userEmailSignUp, userGoogleSignUp, router])
+    }, [userEmailSignUp, userGoogleSignUp]);
 
 
 
@@ -106,5 +124,6 @@ export default function RegisterForm() {
         </div>
     )
 }
+
 
 

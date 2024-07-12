@@ -26,6 +26,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-firebase-hooks": "^5.1.1",
+    "react-loading-skeleton": "^3.4.0",
+    "sweetalert2": "^11.12.2",
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
