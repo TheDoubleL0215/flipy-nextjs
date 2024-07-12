@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { deleteUserCookie } from '@/hooks/deleteUserCookie'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/firebase/config'
+import Image from 'next/image'
 
 const navigation = [
     { name: 'Paklik', href: '/', current: true },
@@ -77,7 +78,11 @@ export default function NavBar() {
                                 <MenuButton className="relative flex rounded-full bg-tertitary text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-tertitary">
                                     <span className="absolute -inset-1.5" />
                                     <span className="sr-only">Open user menu</span>
-                                    {user?.photoURL ? <img alt="" src={user.photoURL} className="h-10 w-10 rounded-full" /> : <UserRound className="h-10 w-10 text-text p-1  rounded-full" />}
+                                    {user?.photoURL ? (
+                                        <Image alt="User Profile" loading="lazy" src={user.photoURL} width={40} height={40} className="h-10 w-10 rounded-full" />
+                                    ) : (
+                                        <UserRound className="h-10 w-10 text-text p-1  rounded-full" />
+                                    )}
                                 </MenuButton>
                             </div>
                             <MenuItems
