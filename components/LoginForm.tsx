@@ -1,22 +1,24 @@
+// components/LoginForm.tsx
 "use client"
 
-import React, { useEffect, useState } from 'react'
-import { Button } from './ui/Button'
-import { Input } from './ui/Input'
-import Link from 'next/link'
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth'
-import { auth } from '@/firebase/config'
-import Image from 'next/image'
-import { redirect, useRouter } from 'next/navigation'
-import { X } from 'lucide-react'
-import { authErrorTranslate } from '@/util/auth-error-translate'
+import React, { useEffect, useState } from 'react';
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
+import Link from 'next/link';
+import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { auth } from '@/firebase/config';
+import Image from 'next/image';
+import { X } from 'lucide-react';
+import { authErrorTranslate } from '@/util/auth-error-translate';
+import { createJwtTokenRequest } from '@/hooks/userJwtTokenRequest';
+import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
-    const [appError, setAppError] = useState("")
-    const [email, setEmail] = useState("")
-    const [loading, setLoading] = useState(false)
-    const [password, setPassword] = useState("")
-    const router = useRouter()
+    const [appError, setAppError] = useState("");
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [password, setPassword] = useState("");
+    const router = useRouter();
 
     const [signInWithEmailAndPassword, userEmailSignIn, loadingEmailSignIn, errorEmailSignIn] = useSignInWithEmailAndPassword(auth);
     const [signInWithGoogle, userGoogleSignIn, loadingGoogleSignIn, errorGoogleSignIn] = useSignInWithGoogle(auth);
@@ -26,33 +28,7 @@ export default function LoginForm() {
         email: string | null;
     };
 
-    const createJwtTokenRequest = async (payload: Payload) => {
-
-        try {
-            const response = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            console.log(data);
-
-            // Redirect to the homepage
-            router.push('/');
-
-        } catch (e) {
-            // Handle errors, displaying an error message
-            console.error('Error during API call:', e);
-        }
-    };
-
+    //if user signed in with one of the methods
     useEffect(() => {
         const user = userEmailSignIn || userGoogleSignIn;
 
@@ -61,7 +37,12 @@ export default function LoginForm() {
                 uid: user.user.uid,
                 email: user.user.email
             };
-            createJwtTokenRequest(payload);
+            createJwtTokenRequest(payload).then(() => {
+                router.push('/');
+            }).catch(e => {
+                console.error('Error during API call:', e);
+                setAppError('Failed to create JWT token');
+            });
         }
     }, [userEmailSignIn, userGoogleSignIn]);
 
@@ -69,19 +50,18 @@ export default function LoginForm() {
         setLoading(loadingEmailSignIn || loadingGoogleSignIn);
     }, [loadingEmailSignIn, loadingGoogleSignIn]);
 
-
-
     useEffect(() => {
         //if error in email sign in
         if (errorEmailSignIn) {
-            setAppError(authErrorTranslate(errorEmailSignIn.code))
+            setAppError(authErrorTranslate(errorEmailSignIn.code));
         }
 
         //if error in google sign in
         if (errorGoogleSignIn) {
-            setAppError(authErrorTranslate(errorGoogleSignIn.code))
+            setAppError(authErrorTranslate(errorGoogleSignIn.code));
         }
-    }, [errorEmailSignIn, errorGoogleSignIn])
+    }, [errorEmailSignIn, errorGoogleSignIn]);
+
 
     return (
         <div className="flex gap-5 flex-col justify-center items-center w-full">
@@ -134,5 +114,5 @@ export default function LoginForm() {
                 <p>Bejelentkezés Google-el</p>
             </Button>
         </div>
-    )
+    );
 }

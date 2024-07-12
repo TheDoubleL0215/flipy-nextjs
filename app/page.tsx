@@ -1,19 +1,19 @@
 "use client"
-
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { useRouter } from "next/navigation";
-import { deleteCookie, getCookie } from "cookies-next";
+import DashboardDecks from "@/components/DashboardDecks";
 import NavBar from "@/components/NavBar";
-import Spinner from "@/components/ui/Spinner";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/config";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Home() {
+  const [user] = useAuthState(auth);
 
   return (
     <>
       <NavBar />
+      <div className="flex flex-col gap-5 m-8">
+        <h1 className="text-3xl font-bold text-text">Létrehozott pakli(k):</h1>
+        <DashboardDecks />
+      </div>
     </>
   );
 }
