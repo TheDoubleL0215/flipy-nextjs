@@ -15,12 +15,12 @@ export default function CardHolder({ isLoading, deckData }: {
                     <div key={card.id} className="p-3 bg-secondary rounded-lg flex justify-between border border-border ">
                         <div className="w-full py-8 text-center">
                             <p className="text-sm text-neutral-400 font-semibold">Fogalom</p>
-                            <p className="font-bold text-2xl">{card.term}</p>
+                            <p className="font-bold text-2xl text-text">{card.term}</p>
                         </div>
                         <div className="border-l border-border mx-3"></div>
                         <div className="w-full py-8 text-center">
                             <p className="text-sm text-neutral-400 font-semibold">Definíció</p>
-                            <p className="font-bold text-2xl">{card.definition}</p>
+                            <p className="font-bold text-2xl text-text">{card.definition}</p>
                         </div>
                     </div>
                 ))
