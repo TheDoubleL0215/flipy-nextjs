@@ -7,9 +7,11 @@ import { deleteUserCookie } from '@/hooks/deleteUserCookie'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/firebase/config'
 import Image from 'next/image'
+import { useEffect } from 'react'
+import { trace } from 'console'
 
 const navigation = [
-    { name: 'Paklik', href: '/', current: true },
+    { name: 'Paklik', href: '/', current: false },
 ]
 
 function classNames(...classes: string[]) {
@@ -26,6 +28,17 @@ export default function NavBar() {
     const pathname = usePathname()
 
     const [user] = useAuthState(auth);
+
+    useEffect(() => {
+        navigation.forEach((item) => {
+            if (item.href == pathname) {
+                item.current = true
+            } else {
+                item.current = false
+            }
+        }
+        )
+    }, [router]);
 
 
     return (
@@ -57,7 +70,7 @@ export default function NavBar() {
                                         href={item.href}
                                         aria-current={item.current ? 'page' : undefined}
                                         className={classNames(
-                                            item.current ? ' text-primary-500 font-semibold text-lg' : 'text-gray-300 hover:bg-tertitary hover:text-white',
+                                            item.current ? ' text-primary-500 font-semibold text-lg' : 'text-gray-300 font-semibold hover:bg-tertitary hover:text-white',
                                             'rounded-md px-3 py-2 font-medium text-lg',
                                         )}
                                     >

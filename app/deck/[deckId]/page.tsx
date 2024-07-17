@@ -35,7 +35,7 @@ export default function Page({ params }: { params: { deckId: string } }) {
                 <div className="px-5 md:sticky md:top-[90px] sm:w-full h-full flex flex-col gap-3 bg-background rounded-lg">
                     <DeckProperties isLoading={isLoading} deckData={deckData} />
                     <div className="flex gap-3 w-full">
-                        <Button className='flex w-full justify-center items-center gap-3'>
+                        <Button className='flex w-full justify-center items-center gap-3' onClick={() => router.push(`/deck/${params.deckId}/learn`)}>
                             <Image src="/icons/learnSetLogo.svg" width={32} height={32} alt="learn"></Image>
                             <p className="text-2xl font-bold">Tanulás</p>
                         </Button>

@@ -1,5 +1,5 @@
 import React from 'react'
-import LoginForm from '../../components/LoginForm'
+import LoginForm from './LoginForm'
 import Image from 'next/image'
 
 const login = () => {

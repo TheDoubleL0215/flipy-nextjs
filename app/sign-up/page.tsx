@@ -1,7 +1,6 @@
 import React from 'react'
-import LoginForm from '../../components/LoginForm'
 import Image from 'next/image'
-import RegisterForm from '@/components/RegisterForm'
+import RegisterForm from "./RegisterForm"
 
 const SignUp = () => {
     return (
