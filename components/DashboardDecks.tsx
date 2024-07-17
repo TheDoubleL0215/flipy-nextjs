@@ -7,6 +7,7 @@ import Spinner from "./ui/Spinner";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'; // Import the CSS
 import NoDecksFound from "./NoDecksFound";
+import { queryDecks } from "@/firebase/queryDecks";
 
 export default function DashboardDecks() {
 
@@ -21,12 +22,11 @@ export default function DashboardDecks() {
     useEffect(() => {
         const getDecks = async () => {
             if (user) {
-                const userDecksCollection = collection(db, `users/${user.uid}/decks`);
-                const deckSnapshot = await getDocs(userDecksCollection);
-                const deckList = deckSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setDecks(deckList);
-                console.log(deckList);
-                setLoading(false);
+                queryDecks().then(deckList => {
+                    setDecks(deckList);
+                    console.log(deckList);
+                    setLoading(false);
+                })
             }
         };
         getDecks();
@@ -37,7 +37,7 @@ export default function DashboardDecks() {
         <div className="flex flex-wrap gap-3 w-full">
             {loading ? (
                 // Display skeletons while loading
-                Array.from({ length: 3 }).map((_, index) => (
+                Array.from({ length: 1 }).map((_, index) => (
                     <div key={index} className="">
                         <Skeleton className="flex max-sm:w-full flex-col w-64" height={150} width={256} />
                     </div>
@@ -46,6 +46,7 @@ export default function DashboardDecks() {
                 decks.length === 0 ? <NoDecksFound /> : decks.map(deck => (
                     <DashboardDeckTile
                         key={deck.id}
+                        id={deck.id}
                         name={deck.name}
                         description={deck.description}
                         cards={deck.cards.length} />

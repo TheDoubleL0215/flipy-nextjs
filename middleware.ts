@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 const secret = process.env.JWT_SECRET || "";
 
 export function middleware(request: NextRequest) {
+
     const cookie = request.cookies.get("OutSiteJWT");
 
     if (cookie) {

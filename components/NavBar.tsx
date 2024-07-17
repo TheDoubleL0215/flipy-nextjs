@@ -29,7 +29,7 @@ export default function NavBar() {
 
 
     return (
-        <Disclosure as="nav" className="bg-secondary sticky top-0 z-50 mb-3 transition-all duration-150">
+        <Disclosure as="nav" className="bg-secondary sticky top-0 z-50 mb-6 transition-all duration-150">
             <div className="mx-auto px-2 sm:px-6 lg:px-8">
                 <div className="relative flex h-16 items-center justify-between">
                     <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -45,7 +45,7 @@ export default function NavBar() {
                         <div className="flex flex-shrink-0 items-center">
                             <img
                                 alt="Flipy Logo"
-                                src="./app-logo.svg"
+                                src="/app-logo.svg"
                                 className="h-8 w-auto"
                             />
                         </div>

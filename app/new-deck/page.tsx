@@ -4,7 +4,7 @@ import NavBar from '@/components/NavBar'
 import { Button } from '@/components/ui/Button'
 import React, { useEffect, useState } from 'react'
 import { Input } from '@/components/ui/Input'
-import NewDeckCard from '@/components/NewDeckCard'
+import NewDeckCard from './NewDeckCard'
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { auth, db } from '@/firebase/config'
 import { useAuthState } from 'react-firebase-hooks/auth'

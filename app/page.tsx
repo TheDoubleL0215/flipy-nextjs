@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
       <NavBar />
-      <div className="flex flex-col gap-5 m-8">
+      <div className="flex flex-col gap-5 m-2 sm:m-6 lg:m-8">
         <h1 className="text-3xl font-bold text-text">Létrehozott pakli(k):</h1>
         <DashboardDecks />
       </div>

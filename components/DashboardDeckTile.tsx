@@ -1,7 +1,10 @@
+import { redirect } from 'next/navigation'
 import Image from 'next/image'
 import Skeleton from 'react-loading-skeleton'
+import { useRouter } from 'next/navigation'
 
 type DeckTileProps = {
+    id: string
     name: string
     description: string
     cards: number
@@ -9,8 +12,10 @@ type DeckTileProps = {
 }
 
 export default function DashboardDeckTile(props: DeckTileProps) {
+    const router = useRouter()
     return (
-        <div className="flex max-sm:w-full flex-col w-64 p-6 bg-secondary border border-border rounded-lg shadow hover:bg-tertitary hover:border-transparent cursor-pointer transition-colors duration-150">
+        <div className="flex max-sm:w-full flex-col w-64 p-6 bg-secondary border border-border rounded-lg shadow hover:bg-tertitary hover:border-transparent cursor-pointer transition-colors duration-150"
+            onClick={() => router.push(`/deck/${props.id}`)}>
             <h5 className="text-2xl font-bold tracking-tight text-text truncate">{props.name || <Skeleton />}</h5>
             {props.description ? (
                 <p className="font-normal text-gray-700 dark:text-gray-400 truncate">{props.description || <Skeleton />}</p>

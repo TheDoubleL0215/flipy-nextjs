@@ -1,4 +1,4 @@
-import NewDeckCard from '@/components/NewDeckCard'
+import NewDeckCard from "./NewDeckCard"
 import { Button } from '@/components/ui/Button'
 import React, { useState } from 'react'
 

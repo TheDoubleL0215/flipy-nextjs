@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input } from './ui/Input'
+import { Input } from "@/components/ui/Input"
 import { Trash2 } from 'lucide-react'
 
 type Props = {
