@@ -1,20 +1,22 @@
-"use client"
-import React, { useState } from 'react'
+import { useEffect } from 'react';
 import ReactCardFlip from 'react-card-flip';
 import Skeleton from 'react-loading-skeleton';
 
-type FlashcardProps = {
-    term?: string;
-    definition?: string;
+interface FlashcardProps {
+    term: string | undefined;
+    definition: string | undefined;
+    onFlip: (flipped: boolean) => void;
+    isFlipped: boolean;
 }
 
-export default function Flashcard({ term, definition }: FlashcardProps) {
+export default function Flashcard({ term, definition, onFlip, isFlipped }: FlashcardProps) {
+    const flipCard = () => {
+        onFlip(!isFlipped);
+    };
 
-    const [isFlipped, setIsFlipped] = useState(false);
-
-    function flipCard() {
-        setIsFlipped(!isFlipped);
-    }
+    useEffect(() => {
+        onFlip(isFlipped);
+    }, [isFlipped, onFlip]);
 
     return (
         <ReactCardFlip isFlipped={isFlipped} flipDirection="vertical" flipSpeedFrontToBack={0.3} flipSpeedBackToFront={0.3}>
@@ -25,5 +27,5 @@ export default function Flashcard({ term, definition }: FlashcardProps) {
                 <p className='text-text font-bold text-4xl'>{definition || <Skeleton />}</p>
             </div>
         </ReactCardFlip>
-    )
+    );
 }

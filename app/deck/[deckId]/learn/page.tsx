@@ -20,6 +20,11 @@ export default function LearnPage({ params }: { params: { deckId: string } }) {
     const [isEndModalOpen, setIsEndModalOpen] = useState(false);
     const [know, setKnow] = useState(0);
     const [forget, setForget] = useState(0);
+    const [isFlipped, setIsFlipped] = useState(false);
+
+    const handleFlip = (flipped: boolean) => {
+        setIsFlipped(flipped);
+    };
 
     useEffect(() => {
         queryDecks(params.deckId).then((deckList: Deck[]) => {
@@ -36,24 +41,21 @@ export default function LearnPage({ params }: { params: { deckId: string } }) {
 
     const handleButton = (learnt: boolean) => {
         if (learnt) setKnow(know + 1); else setForget(forget + 1);
-        setCardIndex((prevIndex) => {
-            const newIndex = prevIndex + 1;
-            if (deckData && newIndex == deckData.cards.length) {
-                console.log("End of deck");
-                return prevIndex; // Doesn't increment beyond the last card
-            }
-            console.log("Current card index: ", newIndex);
-            return newIndex;
-        });
+        setIsFlipped(false);
+
+        setTimeout(() => {
+            setCardIndex((prevIndex) => {
+                const newIndex = prevIndex + 1;
+                if (deckData && newIndex === deckData.cards.length) {
+                    console.log("End of deck");
+                    setIsEndModalOpen(true);
+                    return prevIndex;
+                }
+                console.log("Current card index: ", newIndex);
+                return newIndex;
+            });
+        }, 100); // 300ms delay
     };
-
-    useEffect(() => {
-        console.log("Current card index in useEffect: ", cardIndex);
-        if (deckData && cardIndex == deckData.cards.length - 1) {
-            setIsEndModalOpen(true);
-        }
-    }, [cardIndex]);
-
 
     return (
         <>
@@ -63,10 +65,15 @@ export default function LearnPage({ params }: { params: { deckId: string } }) {
                 <div className="w-full bg-tertitary rounded-full h-2.5 my-2">
                     {deckData ? <div className="bg-primary-500 h-2.5 rounded-full transition-all duration-300" style={{ width: deckData?.cards.length > 0 ? `${((cardIndex + 1) / deckData.cards.length) * 100}%` : '100%' }}></div> : <Skeleton />}
                 </div>
-                <Flashcard term={deckData?.cards[cardIndex].term} definition={deckData?.cards[cardIndex].definition} />
+                <Flashcard
+                    term={deckData?.cards[cardIndex].term}
+                    definition={deckData?.cards[cardIndex].definition}
+                    onFlip={handleFlip}
+                    isFlipped={isFlipped}
+                />
                 <div className="flex w-full gap-3">
-                    <Button className='w-full' onClick={() => handleButton(false)}>Nem tudom</Button>
-                    <Button className='w-full' onClick={() => handleButton(true)}>Tudom</Button>
+                    <Button className='w-full transition-all duration-300' onClick={() => handleButton(false)}>Nem tudom</Button>
+                    <Button className='w-full transition-all duration-300' onClick={() => handleButton(true)}>Tudom</Button>
                 </div>
             </div>
             <Modal open={isEndModalOpen} setOpen={setIsEndModalOpen} know={know} forget={forget} pathname={pathname} />

@@ -7,6 +7,10 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    boxShadow: {
+      'know-shadow': '0px 0px 25px 0px rgba(17,153,68, 0.75)',
+      'forgot-shadow': '0px 0px 25px 0px rgba(239, 68, 68, 0.75)',
+    },
     extend: {
       fontFamily: {
         body: ["Fira Sans"]
